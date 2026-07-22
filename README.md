@@ -69,3 +69,52 @@ The system helps managers and technical leads track intern progress, review dail
 ---
 
 ## 📂 Project Structure
+
+monitor-app-1.1
+├── .env
+├── .env.example
+├── package.json
+├── package-lock.json
+├── server.ts
+├── vite.config.ts
+├── prisma/
+│   ├── schema.prisma
+│   └── seed.ts
+├── src/
+│   ├── App.tsx
+│   ├── main.tsx
+│   ├── index.css
+│   ├── types.ts
+│   ├── components/
+│   │   ├── intern/
+│   │   │   ├── AskTeamThread.tsx
+│   │   │   ├── DailyLogForm.tsx
+│   │   │   └── StartDayForm.tsx
+│   │   ├── layout/
+│   │   │   └── DashboardShell.tsx
+│   │   └── techlead/
+│   │       └── InternDetail.tsx
+│   ├── context/
+│   │   ├── AuthContext.tsx
+│   │   └── ThemeContext.tsx
+│   ├── db/
+│   │   └── prisma.ts
+│   ├── lib/
+│   │   ├── supabase.ts
+│   │   └── supabaseClient.ts
+│   ├── pages/
+│   │   ├── auth/
+│   │   │   └── Login.tsx
+│   │   ├── intern/
+│   │   │   ├── InternDashboard.tsx
+│   │   │   └── MyProjects.tsx
+│   │   ├── manager/
+│   │   │   └── ManagerOverview.tsx
+│   │   └── techlead/
+│   │       └── TeamOverview.tsx
+│   ├── services/
+│   │   └── api.ts
+│   └── utils/
+│       └── helpers.ts
+├── dist/
+└── node_modules/
