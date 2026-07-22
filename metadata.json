@@ -1,0 +1,6 @@
+{
+  "name": "InternTrack",
+  "description": "A light, satisfying progress monitoring dashboard for software engineering interns, tech leads, and managers with real-time logging, reviews, tasks, and analytics.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

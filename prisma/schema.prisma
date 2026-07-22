@@ -1,0 +1,186 @@
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  INTERN
+  TECH_LEAD
+  MANAGER
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum MistakeSeverity {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+model User {
+  id               String    @id @default(uuid())
+  name             String
+  email            String    @unique
+  password         String?
+  role             Role
+  avatarUrl        String
+  techLeadId       String?
+  isActive         Boolean   @default(true)
+  createdAt        DateTime  @default(now())
+
+  // Self-relation: Tech Lead has many Interns
+  techLead         User?     @relation("TechLeadInterns", fields: [techLeadId], references: [id], onDelete: SetNull)
+  interns          User[]    @relation("TechLeadInterns")
+
+  // Relationships
+  projects         Project[] @relation("ProjectOwner")
+  dailyLogs        DailyLog[]
+  assignedTasks    Task[]    @relation("TaskAssignedTo")
+  createdTasks     Task[]    @relation("TaskAssignedBy")
+  receivedMarks    Mark[]    @relation("MarkIntern")
+  givenMarks       Mark[]    @relation("MarkGivenBy")
+  flaggedMistakes  Mistake[] @relation("MistakeIntern")
+  createdMistakes  Mistake[] @relation("MistakeFlaggedBy")
+  sentMessages     Message[] @relation("MessageFrom")
+  receivedMessages Message[] @relation("MessageTo")
+  questions        Question[]
+  replies          Reply[]
+}
+
+model Project {
+  id          String     @id @default(uuid())
+  name        String
+  description String
+  githubUrl   String
+  techStack   String[]
+  ownerId     String
+  screenshots String[]   @default([])
+  createdAt   DateTime   @default(now())
+
+  owner       User       @relation("ProjectOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  dailyLogs   DailyLog[]
+}
+
+model DailyLog {
+  id            String     @id @default(uuid())
+  internId      String
+  projectId     String
+  summary       String
+  technologies  String[]
+  changes       String
+  screenshotUrl      String?
+  githubUrl          String
+  siteUrl            String?
+  date               String     // YYYY-MM-DD
+  startTime          DateTime?
+  plannedTasks       String?
+  morningQuestion    String?
+  questionResolution String?
+  status             String     @default("submitted") // started, submitted, or reviewed
+  createdAt          DateTime   @default(now())
+
+  intern        User       @relation(fields: [internId], references: [id], onDelete: Cascade)
+  project       Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  marks         Mark[]
+  mistakes      Mistake[]
+}
+
+model Task {
+  id           String       @id @default(uuid())
+  assignedToId String
+  assignedById String
+  title        String
+  description  String
+  dueDate      String       // YYYY-MM-DD
+  priority     TaskPriority
+  status       TaskStatus   @default(TODO)
+  completedAt  String?      // YYYY-MM-DD
+  score        Int?
+  comment      String?
+  createdAt    DateTime     @default(now())
+
+  assignedTo   User         @relation("TaskAssignedTo", fields: [assignedToId], references: [id], onDelete: Cascade)
+  assignedBy   User         @relation("TaskAssignedBy", fields: [assignedById], references: [id], onDelete: Cascade)
+  marks        Mark[]
+}
+
+model Mark {
+  id           String    @id @default(uuid())
+  internId     String
+  givenById    String
+  relatedLogId String?
+  relatedTaskId String?
+  score        Int
+  comment      String?
+  date         String    // YYYY-MM-DD
+  createdAt    DateTime  @default(now())
+
+  intern       User      @relation("MarkIntern", fields: [internId], references: [id], onDelete: Cascade)
+  givenBy      User      @relation("MarkGivenBy", fields: [givenById], references: [id], onDelete: Cascade)
+  relatedLog   DailyLog? @relation(fields: [relatedLogId], references: [id], onDelete: Cascade)
+  relatedTask  Task?     @relation(fields: [relatedTaskId], references: [id], onDelete: Cascade)
+}
+
+model Mistake {
+  id           String          @id @default(uuid())
+  internId     String
+  flaggedById  String
+  relatedLogId String
+  note         String
+  severity     MistakeSeverity
+  date         String          // YYYY-MM-DD
+  resolved     Boolean         @default(false)
+  createdAt    DateTime        @default(now())
+
+  intern       User            @relation("MistakeIntern", fields: [internId], references: [id], onDelete: Cascade)
+  flaggedBy    User            @relation("MistakeFlaggedBy", fields: [flaggedById], references: [id], onDelete: Cascade)
+  relatedLog   DailyLog        @relation(fields: [relatedLogId], references: [id], onDelete: Cascade)
+}
+
+model Message {
+  id        String   @id @default(uuid())
+  fromId    String
+  toId      String
+  content   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  from      User     @relation("MessageFrom", fields: [fromId], references: [id], onDelete: Cascade)
+  to        User     @relation("MessageTo", fields: [toId], references: [id], onDelete: Cascade)
+}
+
+model Question {
+  id        String   @id @default(uuid())
+  internId  String
+  title     String
+  content   String
+  createdAt DateTime @default(now())
+
+  intern    User     @relation(fields: [internId], references: [id], onDelete: Cascade)
+  replies   Reply[]
+}
+
+model Reply {
+  id         String   @id @default(uuid())
+  questionId String
+  authorId   String
+  content    String
+  createdAt  DateTime @default(now())
+
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  author     User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+}
