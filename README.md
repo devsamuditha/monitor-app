@@ -1,20 +1,71 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# Intern Monitoring System
 
-# Run and deploy your AI Studio app
+A full-stack web application designed to monitor, manage, and evaluate intern activities inside a software development team.
 
-This contains everything you need to run your app locally.
+The system helps managers and technical leads track intern progress, review daily work, provide feedback, monitor projects, and evaluate performance.
 
-View your app in AI Studio: https://ai.studio/apps/92741b87-bbec-496b-88e6-58b09b2ffee4
+---
 
-## Run Locally
+## 🚀 Features
 
-**Prerequisites:**  Node.js
+### 👨‍💻 Intern
 
+- Secure login system
+- View assigned projects
+- Update daily work progress
+- Submit daily activities
+- Track personal progress
+- View feedback from technical leads
+- Monitor performance ratings
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+### 👨‍🏫 Tech Lead
+
+- Manage assigned interns
+- Review intern progress
+- Provide feedback
+- Track project activities
+- Identify mistakes and improvements
+- Rate intern performance
+
+### 👨‍💼 Manager
+
+- View overall intern progress
+- Monitor team performance
+- Review reports
+- Analyze intern development
+- Manage system activities
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+
+- React
+- TypeScript
+- Vite
+- Tailwind CSS
+- React Router
+- Axios
+
+### Backend
+
+- Node.js
+- Express.js
+- TypeScript
+
+### Database
+
+- Supabase
+- PostgreSQL
+- Prisma ORM
+
+### Tools
+
+- Git & GitHub
+- VS Code
+- Postman
+
+---
+
+## 📂 Project Structure
